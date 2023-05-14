@@ -1,0 +1,34 @@
+It is build on the top of the react ; Next JS is the React Framework
+
+Next JS is used by some of the world's largest companies, Next JS enables you to create "full-stack web applications" by extending the latest react features, and integrating powerful Rust-based JavaScript tolling for the fastest builds
+
+
+Next JS Features :- 
+
+. Server-Side Rendering (SSR)
+. Simple Routing (Folder Structure based Routing)
+. Static-Side Generation (SSG)
+. Optimized performance
+. Hot Code reloading (Using the Turbopack alpha with Next.js 13 results in : 700x faster updates than Webpack; 10x faster updates than Vite;
+  4x faster than Webpack).
+. API routes (Full-Stack Framework) ; there is no need of making node.js server 
+
+
+Advantages Over React.JS :-
+
+. Search Engine Optimization (SEO)
+. Production Ready
+. Image Optimization
+. Data Fetching Methods (SSR, SSG, Incremental Static Regeneration ISR) SSG faster > SSR
+. 700x faster Turbopack than Webpack
+. API Routes (Server Already build ; while in React JS we want to create a server like node js , express js)
+. TypeScript supported 
+
+
+Next JS 13 Features :-
+
+. App Directory
+. Layouts
+. Server Component
+. Fetch API Extended 
+. Turbo Pack
