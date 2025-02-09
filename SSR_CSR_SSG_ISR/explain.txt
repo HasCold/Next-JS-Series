@@ -1,0 +1,128 @@
+In Next.js **App Router** (introduced in Next.js 13 and stable in Next.js 14), the rendering paradigms slightly change compared to the **Pages Router**. Let's see how **SSR, CSR, SSG, and ISR** work in the App Router (`app/` directory).  
+
+---
+
+## ✅ **1. Server-Side Rendering (SSR) in App Router**
+In the App Router, **SSR is the default behavior** for **server components**. If you define a component inside a `page.tsx` or `page.js` file and fetch data inside it, it's executed on the server.
+
+```tsx
+// app/ssr/page.tsx
+export default async function SSRPage() {
+  const res = await fetch('https://jsonplaceholder.typicode.com/posts/1', {
+    cache: 'no-store', // Ensures SSR on every request
+  });
+  const post = await res.json();
+
+  return (
+    <div>
+      <h1>Server-Side Rendering (SSR)</h1>
+      <h2>{post.title}</h2>
+      <p>{post.body}</p>
+    </div>
+  );
+}
+```
+
+✅ **Use Case:** Real-time data (e.g., dashboards, authentication-based pages).  
+
+---
+
+## ✅ **2. Client-Side Rendering (CSR) in App Router**
+CSR works the same as before. If you use a **client component (`"use client"`)**, fetching is done **on the client side** after the page loads.
+
+```tsx
+// app/csr/page.tsx
+'use client'; // Enables CSR
+import { useEffect, useState } from 'react';
+
+export default function CSRPage() {
+  const [post, setPost] = useState(null);
+
+  useEffect(() => {
+    fetch('https://jsonplaceholder.typicode.com/posts/1')
+      .then((res) => res.json())
+      .then((data) => setPost(data));
+  }, []);
+
+  if (!post) return <p>Loading...</p>;
+
+  return (
+    <div>
+      <h1>Client-Side Rendering (CSR)</h1>
+      <h2>{post.title}</h2>
+      <p>{post.body}</p>
+    </div>
+  );
+}
+```
+
+✅ **Use Case:** When SEO is not important and data is dynamic (e.g., dashboards, user-specific data).  
+
+---
+
+## ✅ **3. Static Site Generation (SSG) in App Router**
+In the App Router, **SSG is achieved using the default caching behavior** (`cache: 'force-cache'`), meaning data is fetched **at build time**.
+
+```tsx
+// app/ssg/page.tsx
+export default async function SSGPage() {
+  const res = await fetch('https://jsonplaceholder.typicode.com/posts/1', {
+    cache: 'force-cache', // Ensures static generation at build time
+  });
+  const post = await res.json();
+
+  return (
+    <div>
+      <h1>Static Site Generation (SSG)</h1>
+      <h2>{post.title}</h2>
+      <p>{post.body}</p>
+    </div>
+  );
+}
+```
+
+✅ **Use Case:** Static content like blogs, marketing pages.  
+
+---
+
+## ✅ **4. Incremental Static Regeneration (ISR) in App Router**
+ISR is now handled via the `revalidate` option in the `fetch()` function.
+
+```tsx
+// app/isr/page.tsx
+export default async function ISRPage() {
+  const res = await fetch('https://jsonplaceholder.typicode.com/posts/1', {
+    next: { revalidate: 10 }, // Regenerate every 10 seconds
+  });
+  const post = await res.json();
+
+  return (
+    <div>
+      <h1>Incremental Static Regeneration (ISR)</h1>
+      <h2>{post.title}</h2>
+      <p>{post.body}</p>
+    </div>
+  );
+}
+```
+
+✅ **Use Case:** Frequently updating content like news, product pages.  
+
+---
+
+### **🚀 Key Differences in the App Router**
+| Rendering | Pages Router (`pages/`) | App Router (`app/`) |
+|-----------|-----------------|-----------------|
+| **SSR** | `getServerSideProps()` | `fetch()` with `cache: 'no-store'` |
+| **CSR** | `useEffect()` in client component | `"use client"` with `useEffect()` |
+| **SSG** | `getStaticProps()` | `fetch()` with `cache: 'force-cache'` (default) |
+| **ISR** | `getStaticProps()` with `revalidate` | `fetch()` with `next: { revalidate: X }` |
+
+---
+
+## 🛠 **What Changed in App Router?**
+1. ✅ **No `getServerSideProps` or `getStaticProps`** → Everything is controlled via `fetch()` options.
+2. ✅ **Server Components by Default** → CSR requires `"use client"`.
+3. ✅ **ISR is Simpler** → Just add `{ next: { revalidate: X } }` to `fetch()`.
+
+Would you like a deeper explanation or examples for any of these? 🚀
